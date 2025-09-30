@@ -1,63 +1,64 @@
+// VERSIÓN MODULAR - Programación Funcional
+// Funciones puras para lógica de autenticación
+
 import { 
-    createUser, 
+    createNewUser, 
     getUserByEmailWithPassword, 
     emailExists,
     getUserByIdWithPassword 
 } from '../repository/user.repository.js';
+import { validateUser } from '../utils/user.utils.js';
 
-// Función para registrar un nuevo usuario
+// Registrar usuario (función pura)
 export const registerUser = async (userData) => {
     const { nombre, email, password } = userData;
     
-    // Verificar si el email ya existe
+    // Validar datos
+    const errors = validateUser({ nombre, email, password });
+    if (errors.length > 0) {
+        throw new Error(`Datos inválidos: ${errors.join(', ')}`);
+    }
+    
+    // Verificar si email existe
     if (emailExists(email)) {
         throw new Error('El email ya está registrado');
     }
     
-    // Crear el nuevo usuario
-    const nuevoUsuario = createUser({
-        nombre,
-        email,
-        password // En producción esto estaría encriptado
-    });
-    
-    // Devolver el usuario sin la contraseña
-    const { password: _, ...usuarioSinPassword } = nuevoUsuario;
-    return usuarioSinPassword;
+    // Crear usuario
+    return createNewUser({ nombre, email, password });
 };
 
-// Función para hacer login
+// Hacer login (función pura)
 export const loginUser = async (email, password) => {
-    // Buscar el usuario por email (con contraseña)
     const usuario = getUserByEmailWithPassword(email);
     
     if (!usuario) {
         throw new Error('Email o contraseña incorrectos');
     }
     
-    // Verificar la contraseña (en producción esto sería con hash)
     if (usuario.password !== password) {
         throw new Error('Email o contraseña incorrectos');
     }
     
-    // Generar un token simple (en producción sería JWT)
     const token = `token_${usuario.id}_${Date.now()}`;
     
-    // Devolver el usuario sin la contraseña y el token
     return {
-        usuario: usuario.toSafeObject(),
+        usuario: {
+            id: usuario.id,
+            nombre: usuario.nombre,
+            email: usuario.email,
+            createdAt: usuario.createdAt
+        },
         token
     };
 };
 
-// Función para verificar un token
+// Verificar token (función pura)
 export const verifyToken = async (token) => {
-    // Verificar formato básico del token
     if (!token || !token.startsWith('token_')) {
         throw new Error('Token inválido');
     }
     
-    // Extraer el ID del usuario del token
     const parts = token.split('_');
     if (parts.length !== 3) {
         throw new Error('Token inválido');
@@ -70,11 +71,15 @@ export const verifyToken = async (token) => {
         throw new Error('Usuario no encontrado');
     }
     
-    // Devolver el usuario sin la contraseña
-    return usuario.toSafeObject();
+    return {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        createdAt: usuario.createdAt
+    };
 };
 
-// Función para obtener perfil de usuario
+// Obtener perfil de usuario (función pura)
 export const getUserProfile = async (userId) => {
     const usuario = getUserByIdWithPassword(userId);
     
@@ -82,6 +87,10 @@ export const getUserProfile = async (userId) => {
         throw new Error('Usuario no encontrado');
     }
     
-    // Devolver el usuario sin la contraseña
-    return usuario.toSafeObject();
+    return {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        createdAt: usuario.createdAt
+    };
 };
