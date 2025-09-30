@@ -5,7 +5,8 @@ import {
     createNewUser, 
     getUserByEmailWithPassword, 
     emailExists,
-    getUserByIdWithPassword 
+    getUserByIdWithPassword,
+    getUserById
 } from '../repository/user.repository.js';
 import { validateUser } from '../utils/user.utils.js';
 
@@ -81,16 +82,11 @@ export const verifyToken = async (token) => {
 
 // Obtener perfil de usuario (función pura)
 export const getUserProfile = async (userId) => {
-    const usuario = getUserByIdWithPassword(userId);
+    const usuario = getUserById(userId);
     
     if (!usuario) {
         throw new Error('Usuario no encontrado');
     }
     
-    return {
-        id: usuario.id,
-        nombre: usuario.nombre,
-        email: usuario.email,
-        createdAt: usuario.createdAt
-    };
+    return usuario;
 };

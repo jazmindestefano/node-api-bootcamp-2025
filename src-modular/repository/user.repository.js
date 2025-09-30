@@ -14,7 +14,11 @@ let usuarios = [
     })
 ];
 
-// Funciones puras para operaciones CRUD
+// Obtener usuario por ID sin contraseña
+export const getUserById = (id) => {
+    const usuario = usuarios.find(user => user.id === parseInt(id));
+    return usuario ? getUserWithoutPassword(usuario) : null;
+};
 
 // Obtener usuario por ID que devuelve contraseña
 export const getUserByIdWithPassword = (id) => {

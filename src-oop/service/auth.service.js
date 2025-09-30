@@ -69,13 +69,13 @@ export class AuthService {
     
     // Método para obtener perfil de usuario
     async getUserProfile(userId) {
-        const usuario = this.userRepository.getUserByIdWithPassword(userId);
+        const usuario = this.userRepository.getUserById(userId);
         
         if (!usuario) {
             throw new Error('Usuario no encontrado');
         }
         
-        return usuario.getBasicInfo();
+        return usuario;
     }
     
     // Método privado para generar token

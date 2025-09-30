@@ -17,6 +17,12 @@ export class UserRepository {
         ];
     }
     
+    // Método para obtener usuario por ID sin contraseña
+    getUserById(id) {
+        const usuario = this._usuarios.find(user => user.id === parseInt(id));
+        return usuario ? usuario.toSafeObject() : null;
+    }
+    
     // Método para obtener usuario por ID con contraseña
     getUserByIdWithPassword(id) {
         return this._usuarios.find(user => user.id === parseInt(id));
