@@ -23,14 +23,10 @@ export class UserRepository {
         return usuario ? usuario.toSafeObject() : null;
     }
     
-    // Método para obtener usuario por ID con contraseña
-    getUserByIdWithPassword(id) {
-        return this._usuarios.find(user => user.id === parseInt(id));
-    }
-    
-    // Método para obtener usuario por email con contraseña
-    getUserByEmailWithPassword(email) {
-        return this._usuarios.find(user => user.email === email);
+    // Método para obtener usuario por email sin contraseña
+    getUserByEmail(email) {
+        const usuario = this._usuarios.find(user => user.email === email);
+        return usuario ? usuario.toSafeObject() : null;
     }
     
     // Método para crear nuevo usuario
@@ -43,5 +39,15 @@ export class UserRepository {
     // Método para verificar si email existe
     emailExists(email) {
         return this._usuarios.some(user => user.email === email);
+    }
+    
+    // Método para actualizar contraseña de usuario
+    updateUserPassword(id, newPassword) {
+        const usuario = this.getUserByIdWithPassword(id);
+        if (usuario) {
+            usuario.changePassword(newPassword);
+            return true;
+        }
+        return false;
     }
 }

@@ -20,14 +20,10 @@ export const getUserById = (id) => {
     return usuario ? getUserWithoutPassword(usuario) : null;
 };
 
-// Obtener usuario por ID que devuelve contraseña
-export const getUserByIdWithPassword = (id) => {
-    return usuarios.find(user => user.id === parseInt(id));
-};
-
-// Obtener usuario por email que devuelve contraseña
-export const getUserByEmailWithPassword = (email) => {
-    return usuarios.find(user => user.email === email);
+// Obtener usuario por email sin contraseña
+export const getUserByEmail = (email) => {
+    const usuario = usuarios.find(user => user.email === email);
+    return usuario ? getUserWithoutPassword(usuario) : null;
 };
 
 // Crear nuevo usuario
@@ -40,4 +36,14 @@ export const createNewUser = (userData) => {
 // Verificar si email existe
 export const emailExists = (email) => {
     return usuarios.some(user => user.email === email);
+};
+
+// Actualizar contraseña de usuario
+export const updateUserPassword = (id, newPassword) => {
+    const index = usuarios.findIndex(user => user.id === parseInt(id));
+    if (index !== -1) {
+        usuarios[index].password = newPassword;
+        return true;
+    }
+    return false;
 };
