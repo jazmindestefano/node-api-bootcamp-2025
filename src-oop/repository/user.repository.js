@@ -50,4 +50,14 @@ export class UserRepository {
         }
         return false;
     }
+
+    // Método para obtener usuario por ID con contraseña (para validaciones internas)
+    getUserByIdWithPassword(id) {
+        return this._usuarios.find(user => user.id === parseInt(id)) || null;
+    }
+
+    // Método para obtener todos los usuarios sin contraseña
+    getAllUsers() {
+        return this._usuarios.map(user => user.toSafeObject());
+    }
 }

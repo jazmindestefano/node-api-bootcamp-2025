@@ -1,39 +1,19 @@
-// VERSIÓN MODULAR - Programación Funcional
-// Controladores como funciones puras
-
 import express from "express";
-import { registerUser, loginUser, verifyToken } from "../service/auth.service.js";
+import { registerUser, loginUser, verifyToken, getUserBasicInfoById, getAllUsersInfo } from "../service/auth.service.js";
+import { validateInput, handleError } from "../utils/validation.utils.js";
 
 const router = express.Router();
-
-// Función pura para manejar errores
-const handleError = (error, res) => {
-    console.error('Error:', error.message);
-    res.status(400).json({
-        message: error.message
-    });
-};
-
-// Función pura para validar datos de entrada
-const validateInput = (req, requiredFields) => {
-    const missingFields = requiredFields.filter(field => !req.body[field]);
-    return missingFields;
-};
 
 // REGISTRO - POST /api/auth/register
 router.post('/register', async (req, res) => {
     try {
         const { nombre, email, password } = req.body;
         
-        // Validar datos básicos
         const missingFields = validateInput(req, ['nombre', 'email', 'password']);
         if (missingFields.length > 0) {
-            return res.status(400).json({
-                message: `Faltan datos: ${missingFields.join(', ')} son obligatorios`
-            });
+            return handleError(new Error(`Faltan datos: ${missingFields.join(', ')} son obligatorios`), res);
         }
         
-        // Registrar usuario
         const usuario = await registerUser({ nombre, email, password });
         
         res.status(201).json({
@@ -51,15 +31,11 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         
-        // Validar datos básicos
         const missingFields = validateInput(req, ['email', 'password']);
         if (missingFields.length > 0) {
-            return res.status(400).json({
-                message: `Faltan datos: ${missingFields.join(', ')} son obligatorios`
-            });
+            return handleError(new Error(`Faltan datos: ${missingFields.join(', ')} son obligatorios`), res);
         }
         
-        // Hacer login
         const result = await loginUser(email, password);
         
         res.json({
@@ -69,9 +45,7 @@ router.post('/login', async (req, res) => {
         });
         
     } catch (error) {
-        res.status(401).json({
-            message: error.message
-        });
+        handleError(error, res);
     }
 });
 
@@ -81,9 +55,7 @@ router.get('/verify', async (req, res) => {
         const authHeader = req.headers.authorization;
         
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({
-                message: 'Token de autorización requerido'
-            });
+            return handleError(new Error('Token de autorización requerido'), res);
         }
         
         const token = authHeader.substring(7);
@@ -95,9 +67,38 @@ router.get('/verify', async (req, res) => {
         });
         
     } catch (error) {
-        res.status(401).json({
-            message: error.message
+        handleError(error, res);
+    }
+});
+
+// GET USER BASIC INFO BY ID - GET /api/auth/user-basic-info/:id
+router.get('/user-basic-info/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const usuario = await getUserBasicInfoById(id);
+
+        res.json({
+            message: 'Información básica del usuario',
+            usuario
         });
+
+    } catch (error) {
+        handleError(error, res);
+    }
+});
+
+// GET ALL USERS INFO - GET /api/auth/all-users-info
+router.get('/all-users-info', async (req, res) => {
+    try {
+        const usuarios = await getAllUsersInfo();
+
+        res.json({
+            message: 'Información de todos los usuarios',
+            usuarios
+        });
+
+    } catch (error) {
+        handleError(error, res);
     }
 });
 

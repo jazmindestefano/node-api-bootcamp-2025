@@ -46,7 +46,6 @@ export class AuthService {
         const token = this._generateToken(usuario);
         
         return {
-            usuario: usuario,
             token
         };
     }
@@ -58,13 +57,18 @@ export class AuthService {
         }
         
         const userId = this._extractUserIdFromToken(token);
-        const usuario = this.userRepository.getUserByIdWithPassword(userId);
+        const usuario = this.userRepository.getUserById(userId);
         
         if (!usuario) {
             throw new Error('Usuario no encontrado');
         }
         
-        return usuario.getBasicInfo();
+        return {
+            id: usuario.id,
+            nombre: usuario.nombre,
+            email: usuario.email,
+            createdAt: usuario.createdAt
+        };
     }
     
     // Método para obtener perfil de usuario
@@ -115,9 +119,17 @@ export class AuthService {
         if (!usuario) {
             throw new Error('Usuario no encontrado');
         }
+
+        // Obtener usuario con contraseña para validar
+        const usuarioConPassword = this.userRepository.getUserByIdWithPassword(userId);
         
-        // En un caso real, aquí verificarías la contraseña actual
-        // Por simplicidad, asumimos que es correcta
+        if (oldPassword !== usuarioConPassword.password) {
+            throw new Error('Contraseña actual incorrecta');
+        }
+
+        if (newPassword === oldPassword) {
+            throw new Error('La nueva contraseña no puede ser igual a la contraseña actual');
+        }
         
         // Validar nueva contraseña
         const tempUser = new User({ ...usuario, password: newPassword });
@@ -129,5 +141,21 @@ export class AuthService {
         
         this.userRepository.updateUserPassword(userId, newPassword);
         return { message: 'Contraseña cambiada exitosamente' };
+    }
+
+    // Método para obtener información básica de usuario por ID
+    async getUserBasicInfoById(userId) {
+        const usuario = this.userRepository.getUserById(userId);
+        
+        if (!usuario) {
+            throw new Error('Usuario no encontrado');
+        }
+        
+        return usuario;
+    }
+
+    // Método para obtener todos los usuarios
+    async getAllUsersInfo() {
+        return this.userRepository.getAllUsers();
     }
 }

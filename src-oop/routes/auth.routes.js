@@ -3,6 +3,7 @@
 
 import express from "express";
 import { AuthService } from "../service/auth.service.js";
+import { handleError, validateInput } from "../utils/validation.utils.js";
 
 export class AuthController {
     constructor() {
@@ -16,6 +17,8 @@ export class AuthController {
         this.router.post('/register', this.register.bind(this));
         this.router.post('/login', this.login.bind(this));
         this.router.get('/verify', this.verify.bind(this));
+        this.router.get('/user-basic-info/:id', this.getUserBasicInfoById.bind(this));
+        this.router.get('/all-users-info', this.getAllUsersInfo.bind(this));
     }
     
     // Método para manejar registro
@@ -24,9 +27,10 @@ export class AuthController {
             const { nombre, email, password } = req.body;
             
             // Validar datos básicos
-            if (!this._validateRequiredFields(req, ['nombre', 'email', 'password'])) {
+            const missingFields = validateInput(req, ['nombre', 'email', 'password']);
+            if (missingFields.length > 0) {
                 return res.status(400).json({
-                    message: 'Faltan datos: nombre, email y password son obligatorios'
+                    message: `Faltan datos: ${missingFields.join(', ')} son obligatorios`
                 });
             }
             
@@ -39,7 +43,7 @@ export class AuthController {
             });
             
         } catch (error) {
-            this._handleError(error, res);
+            handleError(error, res);
         }
     }
     
@@ -49,9 +53,10 @@ export class AuthController {
             const { email, password } = req.body;
             
             // Validar datos básicos
-            if (!this._validateRequiredFields(req, ['email', 'password'])) {
+            const missingFields = validateInput(req, ['email', 'password']);
+            if (missingFields.length > 0) {
                 return res.status(400).json({
-                    message: 'Faltan datos: email y password son obligatorios'
+                    message: `Faltan datos: ${missingFields.join(', ')} son obligatorios`
                 });
             }
             
@@ -60,7 +65,6 @@ export class AuthController {
             
             res.json({
                 message: 'Login exitoso',
-                usuario: result.usuario,
                 token: result.token
             });
             
@@ -96,23 +100,41 @@ export class AuthController {
             });
         }
     }
-    
-    // Método privado para validar campos requeridos
-    _validateRequiredFields(req, requiredFields) {
-        return requiredFields.every(field => req.body[field]);
+
+    // Método para obtener información básica de usuario por ID
+    async getUserBasicInfoById(req, res) {
+        try {
+            const { id } = req.params;
+            const usuario = await this.authService.getUserBasicInfoById(id);
+            
+            res.json({
+                message: 'Información básica del usuario',
+                usuario
+            });
+
+        } catch (error) {
+            handleError(error, res);
+        }
+    }
+
+    // Método para obtener todos los usuarios
+    async getAllUsersInfo(req, res) {
+        try {
+            const usuarios = await this.authService.getAllUsersInfo();
+
+            res.json({
+                message: 'Información de todos los usuarios',
+                usuarios
+            });
+
+        } catch (error) {
+            handleError(error, res);
+        }
     }
     
     // Método privado para validar header de autorización
     _validateAuthHeader(authHeader) {
         return authHeader && authHeader.startsWith('Bearer ');
-    }
-    
-    // Método privado para manejar errores
-    _handleError(error, res) {
-        console.error('Error:', error.message);
-        res.status(400).json({
-            message: error.message
-        });
     }
     
     // Método para obtener el router

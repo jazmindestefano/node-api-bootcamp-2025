@@ -29,7 +29,9 @@ export class User {
             errors.push('El formato del email no es válido');
         }
         
-        if (!isValidPasswordLength(this.password)) {
+        if (!this.password || this.password.trim().length === 0) {
+            errors.push('La contraseña es obligatoria');
+        } else if (!isValidPasswordLength(this.password)) {
             errors.push('La contraseña debe tener al menos 6 caracteres');
         }
         

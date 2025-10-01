@@ -33,7 +33,9 @@ class App {
                 endpoints: {
                     register: 'POST /api/auth/register',
                     login: 'POST /api/auth/login',
-                    verify: 'GET /api/auth/verify'
+                    verify: 'GET /api/auth/verify',
+                    userBasicInfo: 'GET /api/auth/user-basic-info/:id',
+                    allUsersInfo: 'GET /api/auth/all-users-info'
                 }
             });
         });
