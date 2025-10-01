@@ -20,24 +20,27 @@ node-api/
 │   ├── routes/          # Clases de rutas
 │   ├── utils/           # Utilidades de validación
 │   └── index.js         # Punto de entrada
-└── docs/                # Documentación
-    ├── how-to-understand-cors.md
-    ├── how-to-understand-env.md
-    ├── how-to-understand-http.md
-    ├── how-to-understand-node-modules.md
-    ├── how-to-understand-nodejs.md
-    ├── how-to-understand-package-json.md
-    └── how-to-understand-ports.md
+├── package.json         # Configuración del proyecto
+└── README.md           # Documentación del proyecto
 ```
 
-## **Cómo Probar**
+## **Configuración Rápida**
 
 ### **1. Instalar dependencias**
 ```bash
 npm install
 ```
 
-### **2. Probar versión Modular**
+### **2. Configurar puertos (opcional)**
+```bash
+# Para ejecutar ambas versiones simultáneamente
+export PORT=3000        # Modular (por defecto)
+export PORT_OOP=3001    # OOP (requerido)
+```
+
+## **Cómo Probar**
+
+### **1. Probar versión Modular**
 ```bash
 npm start
 # o
@@ -45,15 +48,19 @@ npm run dev
 ```
 **Servidor**: http://localhost:3000
 
-### **3. Probar versión POO**
+### **2. Probar versión POO**
 ```bash
+# Configurar puerto para OOP
+export PORT_OOP=3001
+
+# Ejecutar versión OOP
 npm run start:oop
 # o
 npm run dev:oop
 ```
 **Servidor**: http://localhost:3001
 
-### **4. Scripts disponibles**
+### **3. Scripts disponibles**
 - `npm start` - Ejecuta versión modular
 - `npm run start:oop` - Ejecuta versión OOP
 - `npm run dev` - Desarrollo con nodemon (modular)
@@ -202,32 +209,32 @@ curl -X DELETE http://localhost:3001/api/auth/users/1
 - **dotenv** - Manejo de variables de entorno
 - **nodemon** - Herramienta de desarrollo
 
-## **Características**
+## **Comparación Directa**
 
-- ✅ **Misma funcionalidad** en ambos estilos (Modular vs OOP)
-- ✅ **Código limpio** y bien comentado
-- ✅ **Estructura clara** y organizada
-- ✅ **Fácil de entender** para principiantes
-- ✅ **Ejemplos prácticos** de cada estilo
-- ✅ **Validación de datos** robusta
-- ✅ **Manejo de errores** consistente
-- ✅ **Documentación completa** de endpoints
+### **Ejecutar ambas versiones simultáneamente:**
+```bash
+# Terminal 1 - Modular
+export PORT=3000
+npm run dev
 
-## **Diferencias entre Modular y OOP**
+# Terminal 2 - OOP  
+export PORT_OOP=3001
+npm run dev:oop
+```
 
-### **Programación Modular (src-modular/)**
-- Funciones puras y exportables
-- Separación clara de responsabilidades
-- Fácil testing y mantenimiento
-- Estilo funcional
+## **Configuración de Puertos**
 
-### **Programación Orientada a Objetos (src-oop/)**
-- Clases y objetos
-- Encapsulación de datos y métodos
-- Herencia y polimorfismo
-- Estilo orientado a objetos
+### **Variables de Entorno**
+- **Modular**: Usa `PORT` (por defecto 3000)
+- **OOP**: Usa `PORT_OOP` (configurar manualmente)
 
-## **Documentación Adicional**
+### **Ejemplo de configuración:**
+```bash
+# Para ejecutar ambas versiones simultáneamente
+export PORT=3000        # Modular
+export PORT_OOP=3001    # OOP
 
-Consulta los archivos en la carpeta `docs/` para entender conceptos específicos:
-- CORS, Variables de entorno, HTTP, Node.js, etc.
+# Ejecutar ambas
+npm run dev &           # Modular en puerto 3000
+npm run dev:oop         # OOP en puerto 3001
+```
