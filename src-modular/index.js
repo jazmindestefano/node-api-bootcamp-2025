@@ -29,7 +29,12 @@ const setupRoutes = (app) => {
             endpoints: {
                 register: 'POST /api/auth/register',
                 login: 'POST /api/auth/login',
-                verify: 'GET /api/auth/verify'
+                verify: 'GET /api/auth/verify',
+                userBasicInfo: 'GET /api/auth/user-basic-info/:id',
+                allUsersInfo: 'GET /api/auth/all-users-info',
+                updateUserComplete: 'PUT /api/auth/users/:id',
+                updateUserPartial: 'PATCH /api/auth/users/:id',
+                deleteUser: 'DELETE /api/auth/users/:id'
             }
         });
     });
@@ -42,7 +47,7 @@ const setupRoutes = (app) => {
 
 // Función pura para iniciar servidor
 const startServer = (app) => {
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT;
     
     app.listen(port, () => {
         console.log(`Servidor Modular corriendo en puerto ${port}`);

@@ -27,11 +27,41 @@ export const emailExists = (email) => {
 };
 
 export const updateUserPassword = (id, newPassword) => {
-    let userFound = usuarios.find(user => user.id === parseInt(id));
+    let userFound = getUserById(id);
     if (userFound) {
         userFound.password = newPassword;
         return true;
     }
 
     return false;
+};
+
+// Actualizar usuario completamente (PUT)
+export const updateUser = (id, userData) => {
+    const userFound = getUserById(id);
+    if (userFound) {
+        usuarios[index] = { ...userFound, ...userData, id: parseInt(id) };
+        return getUserWithoutPassword(usuarios[index]);
+    }
+    return null;
+};
+
+// Actualizar usuario parcialmente (PATCH)
+export const patchUser = (id, userData) => {
+    const userFound = getUserById(id);
+    if (userFound) {
+        usuarios[index] = { ...userFound, ...userData };
+        return getUserWithoutPassword(usuarios[index]);
+    }
+    return null;
+};
+
+// Eliminar usuario (DELETE)
+export const deleteUser = (id) => {
+    const userFound = getUserById(id);
+    if (userFound) {
+        const deletedUser = usuarios.splice(userFound, 1)[0];
+        return getUserWithoutPassword(deletedUser);
+    }
+    return null;
 };

@@ -12,7 +12,7 @@ dotenv.config();
 class App {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || 3000;
+        this.port = process.env.PORT_OOP;
         this._setupMiddleware();
         this._setupRoutes();
     }
@@ -35,7 +35,10 @@ class App {
                     login: 'POST /api/auth/login',
                     verify: 'GET /api/auth/verify',
                     userBasicInfo: 'GET /api/auth/user-basic-info/:id',
-                    allUsersInfo: 'GET /api/auth/all-users-info'
+                    allUsersInfo: 'GET /api/auth/all-users-info',
+                    updateUserComplete: 'PUT /api/auth/users/:id',
+                    updateUserPartial: 'PATCH /api/auth/users/:id',
+                    deleteUser: 'DELETE /api/auth/users/:id'
                 }
             });
         });

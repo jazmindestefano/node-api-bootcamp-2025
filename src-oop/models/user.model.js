@@ -19,20 +19,24 @@ export class User {
     validate() {
         const errors = [];
         
-        if (!this.nombre || this.nombre.trim().length === 0) {
+        if (this.nombre !== undefined && (!this.nombre || this.nombre.trim().length === 0)) {
             errors.push('El nombre es obligatorio');
         }
         
-        if (!this.email || this.email.trim().length === 0) {
-            errors.push('El email es obligatorio');
-        } else if (!isValidEmailFormat(this.email)) {
-            errors.push('El formato del email no es válido');
+        if (this.email !== undefined) {
+            if (!this.email || this.email.trim().length === 0) {
+                errors.push('El email es obligatorio');
+            } else if (!isValidEmailFormat(this.email)) {
+                errors.push('El formato del email no es válido');
+            }
         }
         
-        if (!this.password || this.password.trim().length === 0) {
-            errors.push('La contraseña es obligatoria');
-        } else if (!isValidPasswordLength(this.password)) {
-            errors.push('La contraseña debe tener al menos 6 caracteres');
+        if (this.password !== undefined) {
+            if (!this.password || this.password.trim().length === 0) {
+                errors.push('La contraseña es obligatoria');
+            } else if (!isValidPasswordLength(this.password)) {
+                errors.push('La contraseña debe tener al menos 6 caracteres');
+            }
         }
         
         return errors;

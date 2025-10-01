@@ -25,20 +25,29 @@ export const getUserWithoutPassword = (user) => {
 
 export const validateUser = (userData) => {
     const errors = [];
-    const { requiredFields, patterns, minLengths } = UserModel;
+    const { patterns, minLengths } = UserModel;
     
-    requiredFields.forEach(field => {
-        if (!userData[field] || userData[field].trim().length === 0) {
-            errors.push(`El ${field} es obligatorio`);
+    // Validar solo los campos que están presentes
+    if (userData.nombre !== undefined) {
+        if (!userData.nombre || userData.nombre.trim().length === 0) {
+            errors.push('El nombre es obligatorio');
         }
-    });
-    
-    if (userData.email && !patterns.email.test(userData.email)) {
-        errors.push('El formato del email no es válido');
     }
     
-    if (userData.password && userData.password.length < minLengths.password) {
-        errors.push('La contraseña debe tener al menos 6 caracteres');
+    if (userData.email !== undefined) {
+        if (!userData.email || userData.email.trim().length === 0) {
+            errors.push('El email es obligatorio');
+        } else if (!patterns.email.test(userData.email)) {
+            errors.push('El formato del email no es válido');
+        }
+    }
+    
+    if (userData.password !== undefined) {
+        if (!userData.password || userData.password.trim().length === 0) {
+            errors.push('La contraseña es obligatoria');
+        } else if (userData.password.length < minLengths.password) {
+            errors.push('La contraseña debe tener al menos 6 caracteres');
+        }
     }
     
     return errors;

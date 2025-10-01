@@ -158,4 +158,72 @@ export class AuthService {
     async getAllUsersInfo() {
         return this.userRepository.getAllUsers();
     }
+
+    // Método para actualizar usuario completamente (PUT)
+    async updateUserComplete(userId, userData) {
+        const { nombre, email, password } = userData;
+        
+        // Crear instancia temporal para validar
+        const tempUser = new User({ nombre, email, password });
+        const errors = tempUser.validate();
+        
+        if (errors.length > 0) {
+            throw new Error(`Datos inválidos: ${errors.join(', ')}`);
+        }
+        
+        // Verificar si el usuario existe
+        const existingUser = this.userRepository.getUserById(userId);
+        if (!existingUser) {
+            throw new Error('Usuario no encontrado');
+        }
+        
+        // Verificar si el email ya existe en otro usuario
+        if (email !== existingUser.email && this.userRepository.emailExists(email)) {
+            throw new Error('El email ya está registrado por otro usuario');
+        }
+        
+        return this.userRepository.updateUser(userId, { nombre, email, password });
+    }
+
+    // Método para actualizar usuario parcialmente (PATCH)
+    async updateUserPartial(userId, userData) {
+        // Verificar si el usuario existe
+        const existingUser = this.userRepository.getUserById(userId);
+        if (!existingUser) {
+            throw new Error('Usuario no encontrado');
+        }
+        
+        // Validar solo los campos que se están actualizando
+        const fieldsToValidate = {};
+        if (userData.nombre) fieldsToValidate.nombre = userData.nombre;
+        if (userData.email) fieldsToValidate.email = userData.email;
+        if (userData.password) fieldsToValidate.password = userData.password;
+        
+        if (Object.keys(fieldsToValidate).length > 0) {
+            const tempUser = new User(fieldsToValidate);
+            const errors = tempUser.validate();
+            
+            if (errors.length > 0) {
+                throw new Error(`Datos inválidos: ${errors.join(', ')}`);
+            }
+        }
+        
+        // Verificar si el email ya existe en otro usuario
+        if (userData.email && userData.email !== existingUser.email && this.userRepository.emailExists(userData.email)) {
+            throw new Error('El email ya está registrado por otro usuario');
+        }
+        
+        return this.userRepository.patchUser(userId, userData);
+    }
+
+    // Método para eliminar usuario (DELETE)
+    async deleteUserById(userId) {
+        // Verificar si el usuario existe
+        const existingUser = this.userRepository.getUserById(userId);
+        if (!existingUser) {
+            throw new Error('Usuario no encontrado');
+        }
+        
+        return this.userRepository.deleteUser(userId);
+    }
 }

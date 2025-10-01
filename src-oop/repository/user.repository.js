@@ -60,4 +60,34 @@ export class UserRepository {
     getAllUsers() {
         return this._usuarios.map(user => user.toSafeObject());
     }
+
+    // Método para actualizar usuario completamente (PUT)
+    updateUser(id, userData) {
+        const userFound = this.getUserById(id);
+        if (userFound) {
+            this._usuarios[index] = new User({ ...userFound, ...userData, id: parseInt(id) });
+            return this._usuarios[index].toSafeObject();
+        }
+        return null;
+    }
+
+    // Método para actualizar usuario parcialmente (PATCH)
+    patchUser(id, userData) {
+        const userFound = this.getUserById(id);
+        if (userFound) {
+            this._usuarios[index] = new User({ ...userFound, ...userData });
+            return this._usuarios[index].toSafeObject();
+        }
+        return null;
+    }
+
+    // Método para eliminar usuario (DELETE)
+    deleteUser(id) {
+        const userFound = this.getUserById(id);
+        if (userFound) {
+            const deletedUser = this._usuarios.splice(userFound, 1)[0];
+            return deletedUser.toSafeObject();
+        }
+        return null;
+    }
 }
