@@ -4,8 +4,6 @@
   "main": "src-modular/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src-modular/index.js",
-    "start:oop": "node src-oop/index.js",
     "dev": "nodemon src-modular/index.js",
     "dev:oop": "nodemon src-oop/index.js"
   },

@@ -11,7 +11,7 @@ dotenv.config();
 class App {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || 3001;
+        this.port = process.env.PORT_OOP;
         this._setupMiddleware();
         this._setupRoutes();
     }
