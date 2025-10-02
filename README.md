@@ -74,7 +74,6 @@ npm run dev:oop
 ### **Autenticación**
 - `POST /api/auth/register` - Registrar usuario
 - `POST /api/auth/login` - Iniciar sesión
-- `GET /api/auth/verify` - Verificar token (requiere Bearer token)
 
 ### **Gestión de usuarios**
 - `GET /api/auth/user-basic-info/:id` - Obtener información básica de usuario por ID
@@ -125,18 +124,7 @@ curl -X POST http://localhost:3001/api/auth/login \
   }'
 ```
 
-### **3. Verificar token:**
-```bash
-# Versión Modular
-curl -X GET http://localhost:3000/api/auth/verify \
-  -H "Authorization: Bearer token_1_1234567890"
-
-# Versión OOP
-curl -X GET http://localhost:3001/api/auth/verify \
-  -H "Authorization: Bearer token_1_1234567890"
-```
-
-### **4. Obtener información de usuario:**
+### **3. Obtener información de usuario:**
 ```bash
 # Versión Modular
 curl -X GET http://localhost:3000/api/auth/user-basic-info/1

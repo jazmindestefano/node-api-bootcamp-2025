@@ -16,7 +16,6 @@ export class AuthController {
     _setupRoutes() {
         this.router.post('/register', this.register.bind(this));
         this.router.post('/login', this.login.bind(this));
-        this.router.get('/verify', this.verify.bind(this));
         this.router.get('/user-basic-info/:id', this.getUserBasicInfoById.bind(this));
         this.router.get('/all-users-info', this.getAllUsersInfo.bind(this));
         this.router.put('/users/:id', this.updateUserComplete.bind(this));
@@ -78,31 +77,6 @@ export class AuthController {
         }
     }
     
-    // Método para verificar token
-    async verify(req, res) {
-        try {
-            const authHeader = req.headers.authorization;
-            
-            if (!this._validateAuthHeader(authHeader)) {
-                return res.status(401).json({
-                    message: 'Token de autorización requerido'
-                });
-            }
-            
-            const token = authHeader.substring(7);
-            const usuario = await this.authService.verifyToken(token);
-            
-            res.json({
-                message: 'Token válido',
-                usuario
-            });
-            
-        } catch (error) {
-            res.status(401).json({
-                message: error.message
-            });
-        }
-    }
 
     // Método para obtener información básica de usuario por ID
     async getUserBasicInfoById(req, res) {

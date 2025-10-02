@@ -40,30 +40,6 @@ export const loginUser = async (email, password) => {
     };
 };
 
-export const verifyToken = async (token) => {
-    if (!token || !token.startsWith('token_')) {
-        throw new Error('Token inválido');
-    }
-    
-    const parts = token.split('_');
-    if (parts.length !== 3) {
-        throw new Error('Token inválido');
-    }
-    
-    const userId = parseInt(parts[1]);
-    const usuario = getUserById(userId);
-    
-    if (!usuario) {
-        throw new Error('Usuario no encontrado');
-    }
-    
-    return {
-        id: usuario.id,
-        nombre: usuario.nombre,
-        email: usuario.email,
-        createdAt: usuario.createdAt
-    };
-};
 
 export const getUserProfile = async (userId) => {
     const usuario = getUserById(userId);

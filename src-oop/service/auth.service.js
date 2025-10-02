@@ -50,26 +50,6 @@ export class AuthService {
         };
     }
     
-    // Método para verificar token
-    async verifyToken(token) {
-        if (!this._isValidTokenFormat(token)) {
-            throw new Error('Token inválido');
-        }
-        
-        const userId = this._extractUserIdFromToken(token);
-        const usuario = this.userRepository.getUserById(userId);
-        
-        if (!usuario) {
-            throw new Error('Usuario no encontrado');
-        }
-        
-        return {
-            id: usuario.id,
-            nombre: usuario.nombre,
-            email: usuario.email,
-            createdAt: usuario.createdAt
-        };
-    }
     
     // Método para obtener perfil de usuario
     async getUserProfile(userId) {

@@ -30,16 +30,15 @@ class App {
             res.json({
                 message: 'API OOP funcionando',
                 paradigm: 'Programación Orientada a Objetos',
-                endpoints: {
-                    register: 'POST /api/auth/register',
-                    login: 'POST /api/auth/login',
-                    verify: 'GET /api/auth/verify',
-                    userBasicInfo: 'GET /api/auth/user-basic-info/:id',
-                    allUsersInfo: 'GET /api/auth/all-users-info',
-                    updateUserComplete: 'PUT /api/auth/users/:id',
-                    updateUserPartial: 'PATCH /api/auth/users/:id',
-                    deleteUser: 'DELETE /api/auth/users/:id'
-                }
+            endpoints: {
+                register: 'POST /api/auth/register',
+                login: 'POST /api/auth/login',
+                userBasicInfo: 'GET /api/auth/user-basic-info/:id',
+                allUsersInfo: 'GET /api/auth/all-users-info',
+                updateUserComplete: 'PUT /api/auth/users/:id',
+                updateUserPartial: 'PATCH /api/auth/users/:id',
+                deleteUser: 'DELETE /api/auth/users/:id'
+            }
             });
         });
         

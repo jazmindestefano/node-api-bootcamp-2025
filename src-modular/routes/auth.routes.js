@@ -2,7 +2,6 @@ import express from "express";
 import { 
     registerUser, 
     loginUser, 
-    verifyToken, 
     getUserBasicInfoById, 
     getAllUsersInfo,
     updateUserComplete,
@@ -58,27 +57,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// VERIFICAR TOKEN - GET /api/auth/verify
-router.get('/verify', async (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-        
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return handleError(new Error('Token de autorización requerido'), res);
-        }
-        
-        const token = authHeader.substring(7);
-        const usuario = await verifyToken(token);
-        
-        res.json({
-            message: 'Token válido',
-            usuario
-        });
-        
-    } catch (error) {
-        handleError(error, res);
-    }
-});
 
 // GET USER BASIC INFO BY ID - GET /api/auth/user-basic-info/:id
 router.get('/user-basic-info/:id', async (req, res) => {
