@@ -21,7 +21,7 @@ const setupRoutes = (app) => {
     app.get('/', (req, res) => {
         res.json({
             message: 'API Modular funcionando',
-            paradigm: 'Programación Funcional/Modular',
+            paradigm: 'Programación Modular',
             version: '2.0',
             endpoints: {
                 auth: {
@@ -48,7 +48,7 @@ const setupRoutes = (app) => {
 };
 
 const startServer = (app) => {
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT;
     
     app.listen(port, () => {
         console.log(`🚀 Servidor Modular corriendo en puerto ${port}`);
