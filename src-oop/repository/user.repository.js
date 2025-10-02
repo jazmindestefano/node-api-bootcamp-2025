@@ -63,9 +63,14 @@ export class UserRepository {
 
     // Método para actualizar usuario completamente (PUT)
     updateUser(id, userData) {
-        const userFound = this.getUserById(id);
-        if (userFound) {
-            this._usuarios[index] = new User({ ...userFound, ...userData, id: parseInt(id) });
+        const index = this._usuarios.findIndex(user => user.id === parseInt(id));
+        if (index !== -1) {
+            this._usuarios[index] = new User({ 
+                ...this._usuarios[index], 
+                ...userData, 
+                id: parseInt(id),
+                createdAt: this._usuarios[index].createdAt
+            });
             return this._usuarios[index].toSafeObject();
         }
         return null;
@@ -73,9 +78,12 @@ export class UserRepository {
 
     // Método para actualizar usuario parcialmente (PATCH)
     patchUser(id, userData) {
-        const userFound = this.getUserById(id);
-        if (userFound) {
-            this._usuarios[index] = new User({ ...userFound, ...userData });
+        const index = this._usuarios.findIndex(user => user.id === parseInt(id));
+        if (index !== -1) {
+            this._usuarios[index] = new User({ 
+                ...this._usuarios[index], 
+                ...userData 
+            });
             return this._usuarios[index].toSafeObject();
         }
         return null;
@@ -83,9 +91,9 @@ export class UserRepository {
 
     // Método para eliminar usuario (DELETE)
     deleteUser(id) {
-        const userFound = this.getUserById(id);
-        if (userFound) {
-            const deletedUser = this._usuarios.splice(userFound, 1)[0];
+        const index = this._usuarios.findIndex(user => user.id === parseInt(id));
+        if (index !== -1) {
+            const deletedUser = this._usuarios.splice(index, 1)[0];
             return deletedUser.toSafeObject();
         }
         return null;

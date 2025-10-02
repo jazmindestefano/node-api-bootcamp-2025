@@ -1,10 +1,9 @@
 // VERSIÓN OOP - Programación Orientada a Objetos
-// Aplicación principal usando clases y objetos
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { AuthController } from "./routes/auth.routes.js";
+import { UsersController } from "./routes/users.routes.js";
 
 dotenv.config();
 
@@ -12,7 +11,7 @@ dotenv.config();
 class App {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT_OOP;
+        this.port = process.env.PORT || 3001;
         this._setupMiddleware();
         this._setupRoutes();
     }
@@ -30,28 +29,39 @@ class App {
             res.json({
                 message: 'API OOP funcionando',
                 paradigm: 'Programación Orientada a Objetos',
-            endpoints: {
-                register: 'POST /api/auth/register',
-                login: 'POST /api/auth/login',
-                userBasicInfo: 'GET /api/auth/user-basic-info/:id',
-                allUsersInfo: 'GET /api/auth/all-users-info',
-                updateUserComplete: 'PUT /api/auth/users/:id',
-                updateUserPartial: 'PATCH /api/auth/users/:id',
-                deleteUser: 'DELETE /api/auth/users/:id'
-            }
+                version: '2.0',
+                endpoints: {
+                    auth: {
+                        register: 'POST /api/auth/register',
+                        login: 'POST /api/auth/login'
+                    },
+                    users: {
+                        getAll: 'GET /api/users',
+                        getById: 'GET /api/users/:id',
+                        update: 'PUT /api/users/:id',
+                        partialUpdate: 'PATCH /api/users/:id',
+                        delete: 'DELETE /api/users/:id',
+                        changePassword: 'PATCH /api/users/:id/password'
+                    }
+                }
             });
         });
         
-        // Crear instancia del controlador de autenticación
+        // Crear instancias de los controladores
         const authController = new AuthController();
+        const usersController = new UsersController();
+        
+        // Configurar rutas
         this.app.use('/api/auth', authController.getRouter());
+        this.app.use('/api/users', usersController.getRouter());
     }
     
     // Método para iniciar el servidor
     start() {
         this.app.listen(this.port, () => {
-            console.log(`Servidor OOP corriendo en puerto ${this.port}`);
-            console.log(`Paradigma: Programación Orientada a Objetos`);
+            console.log(`🚀 Servidor OOP corriendo en puerto ${this.port}`);
+            console.log(`📚 Paradigma: Programación Orientada a Objetos`);
+            console.log(`🔗 Documentación: http://localhost:${this.port}/`);
         });
     }
     

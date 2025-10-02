@@ -19,8 +19,11 @@ export class User {
     validate() {
         const errors = [];
         
-        if (this.nombre !== undefined && (!this.nombre || this.nombre.trim().length === 0)) {
-            errors.push('El nombre es obligatorio');
+        // Validar solo los campos que están presentes
+        if (this.nombre !== undefined) {
+            if (!this.nombre || this.nombre.trim().length === 0) {
+                errors.push('El nombre es obligatorio');
+            }
         }
         
         if (this.email !== undefined) {
@@ -41,7 +44,6 @@ export class User {
         
         return errors;
     }
-    
     
     // Método para cambiar contraseña
     changePassword(newPassword) {
