@@ -26,41 +26,36 @@ export const emailExists = (email) => {
     return usuarios.some(user => user.email === email);
 };
 
-export const updateUserPassword = (id, newPassword) => {
-    let userFound = getUserById(id);
-    if (userFound) {
-        userFound.password = newPassword;
-        return true;
-    }
-
-    return false;
-};
-
-// Actualizar usuario completamente (PUT)
 export const updateUser = (id, userData) => {
-    const userFound = getUserById(id);
-    if (userFound) {
-        usuarios[index] = { ...userFound, ...userData, id: parseInt(id) };
+    const index = usuarios.findIndex(user => user.id === parseInt(id));
+    if (index !== -1) {
+        usuarios[index] = { 
+            ...usuarios[index], 
+            ...userData, 
+            id: parseInt(id),
+            createdAt: usuarios[index].createdAt
+        };
         return getUserWithoutPassword(usuarios[index]);
     }
     return null;
 };
 
-// Actualizar usuario parcialmente (PATCH)
 export const patchUser = (id, userData) => {
-    const userFound = getUserById(id);
-    if (userFound) {
-        usuarios[index] = { ...userFound, ...userData };
+    const index = usuarios.findIndex(user => user.id === parseInt(id));
+    if (index !== -1) {
+        usuarios[index] = { 
+            ...usuarios[index], 
+            ...userData 
+        };
         return getUserWithoutPassword(usuarios[index]);
     }
     return null;
 };
 
-// Eliminar usuario (DELETE)
 export const deleteUser = (id) => {
-    const userFound = getUserById(id);
-    if (userFound) {
-        const deletedUser = usuarios.splice(userFound, 1)[0];
+    const index = usuarios.findIndex(user => user.id === parseInt(id));
+    if (index !== -1) {
+        const deletedUser = usuarios.splice(index, 1)[0];
         return getUserWithoutPassword(deletedUser);
     }
     return null;
